@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>RELEASE</version>
+            <version>1.16.20</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
