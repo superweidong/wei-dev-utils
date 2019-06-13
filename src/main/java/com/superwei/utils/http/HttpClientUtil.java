@@ -178,7 +178,7 @@ public class HttpClientUtil {
         return HttpClientUtilHolder.instance;
     }
 
-    public InputStream doGet(String url) throws URISyntaxException, ClientProtocolException, IOException {
+    public InputStream doGet(String url) throws URISyntaxException, IOException {
         HttpResponse response = this.doGet(url, null);
         return response != null ? response.getEntity().getContent() : null;
     }
@@ -189,7 +189,7 @@ public class HttpClientUtil {
      * @param queryParams 请求头的查询参数.
      */
     public HttpResponse doGet(String url, Map<String, String> queryParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         HttpGet gm = new HttpGet();
         URIBuilder builder = new URIBuilder(url);
         // 填入查询参数
@@ -200,53 +200,53 @@ public class HttpClientUtil {
         return client.execute(gm);
     }
     
-    public String doGetForString(String url) throws URISyntaxException, ClientProtocolException, IOException {
+    public String doGetForString(String url) throws URISyntaxException, IOException {
         return HttpClientUtil.readStream(this.doGet(url), null);
     }
     
     public String doGetForString(String url, Map<String, String> queryParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         return HttpClientUtil.readStream(this.doGetForStream(url, queryParams), null);
     }
     
     public InputStream doGetForStream(String url, Map<String, String> queryParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         HttpResponse response = this.doGet(url, queryParams);
         return response != null ? response.getEntity().getContent() : null;
     }
 
     public InputStream doPostForStream(String url, Map<String, String> queryParams, String body)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         HttpResponse response = this.doPost(url, queryParams, null, defaultEncoding, body);
         return response != null ? response.getEntity().getContent() : null;
     }
 
     public InputStream doPostForStream(String url, Map<String, String> queryParams, Map<String, String> formParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         HttpResponse response = this.doPost(url, queryParams, formParams, defaultEncoding, null);
         return response != null ? response.getEntity().getContent() : null;
     }
 
     public InputStream doPostForStream(String url, Map<String, String> queryParams, Map<String, String> formParams,
             String charset, Map<String, File> fileParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         HttpResponse response = this.doPost(url, queryParams, formParams, charset, null, fileParams);
         return response != null ? response.getEntity().getContent() : null;
     }
     
     
     public String doPostForString(String url, Map<String, String> queryParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         return HttpClientUtil.readStream(this.doPostForStream(url, queryParams, ""), null);
     }
 
     public String doPostForString(String url, Map<String, String> queryParams, String body)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         return HttpClientUtil.readStream(this.doPostForStream(url, queryParams, body), null);
     }
 
     public String doPostRetString(String url, Map<String, String> queryParams, Map<String, String> formParams)
-            throws URISyntaxException, ClientProtocolException, IOException {
+            throws URISyntaxException, IOException {
         return HttpClientUtil.readStream(this.doPostForStream(url, queryParams, formParams), null);
     }
 
