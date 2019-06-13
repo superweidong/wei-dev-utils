@@ -8,10 +8,10 @@
         <version>2.1.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.superwei.aliexcel</groupId>
+    <groupId>com.superwei.wei-dev-utils</groupId>
     <artifactId>aliexcel</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aliexcel</name>
+    <name>wei-dev-utils</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.16.20</version>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

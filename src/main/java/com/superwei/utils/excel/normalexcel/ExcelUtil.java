@@ -243,9 +243,6 @@ public class ExcelUtil {
             return workbook;
         }
 
-
-        //Map<String, List<T>> collect = list.stream().collect(Collectors.groupingBy(o -> o.getClass().getAnnotationsByType(ExcelSheet.class)[0].name()));
-
         dataMap.forEach((sheetName, lists) -> {
             Field[] declaredFields = lists.get(0).getClass().getDeclaredFields();
             List<String> sheetFields = new ArrayList<>();
@@ -273,47 +270,6 @@ public class ExcelUtil {
                 }
             }
         });
-
-
-
-        /*Class clazz = list.get(0).getClass();
-        String sheetName = null;
-        if (clazz.isAnnotationPresent(ExcelSheet.class)){
-            ExcelSheet sheetType = (ExcelSheet) clazz.getAnnotationsByType(ExcelSheet.class)[0];
-            sheetName = sheetType.name();
-        }
-
-        List<String> sheetFields = new ArrayList<>();
-        Field[] declaredFields = clazz.getDeclaredFields();
-        for (Field field : declaredFields) {
-            if (field.isAnnotationPresent(ExcelField.class)){
-                ExcelField excelField = field.getAnnotationsByType(ExcelField.class)[0];
-                sheetFields.add(excelField.name());
-            }
-        }
-
-
-        Sheet sheet;
-        if (sheetName != null){
-            sheet = workbook.createSheet(sheetName);
-        } else {
-            sheet = workbook.createSheet();
-        }
-
-        Row row = sheet.createRow(0);
-        for (int i = 0; i < sheetFields.size(); i++) {
-            row.createCell(i).setCellValue(sheetFields.get(i));
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            T t = list.get(i);
-            Row newRow = sheet.createRow(i + 1);
-            try {
-                createCell(t, newRow);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }*/
 
         return workbook;
 
@@ -426,7 +382,7 @@ public class ExcelUtil {
             }
 
             //创建一个对象
-            T obj = classe.newInstance();
+            T obj = classe.getDeclaredConstructor().newInstance();
             list.add(obj);
             for (int i = 0; i < fieldList.size(); i++) {
                 //获取该列属性在对象中对应的属性
@@ -570,8 +526,9 @@ public class ExcelUtil {
             try {
                 String cellValue = getCellValue(cell);
                 double dValue = Double.valueOf(cellValue);
-                if (dValue % 1 == 0)
+                if (dValue % 1 == 0){
                     integer = Integer.valueOf((int) dValue);
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -671,17 +628,17 @@ public class ExcelUtil {
             return "";
         }
 
-        if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN){
+        if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)){
 
             return String.valueOf(cell.getBooleanCellValue());
         }
 
-        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+        if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
 
             return String.valueOf(cell.getNumericCellValue());
         }
 
-        if (cell.getCellType() == Cell.CELL_TYPE_STRING){
+        if (cell.getCellTypeEnum().equals(CellType.STRING)){
             return cell.getStringCellValue();
         }
 
