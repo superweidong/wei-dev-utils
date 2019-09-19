@@ -1,0 +1,25 @@
+Redisson是基于Redis实现的解决分布式问题的项目
+
+配置
+1.引入依赖
+
+<dependency>
+    <groupId>org.redisson</groupId>
+    <artifactId>redisson</artifactId>
+    <version>3.5.0</version>
+</dependency>
+
+20190711更新：redisson官方发布了redisson-spring-boot-starter，具体可以参考：https://github.com/redisson/redisson/tree/master/redisson-spring-boot-starter#spring-boot-starter
+
+2.定义Locker的接口定义类  Locker.class
+
+3.Locker接口实现类  RedissonLocker.class
+
+4.redisson属性装配类  RedissonConfig
+    因为redisson-spring-boot-starter#spring-boot-starter
+    已经自动注入RedissonClient redissonClient   所以只需引入即可使用   redissonClient  在start里面会自动根据配置   选择不同的配置方式  进行装载
+
+5.测试类测试RedissonTest
+
+
+更多配置  参考官方文档：https://github.com/redisson/redisson/wiki/
