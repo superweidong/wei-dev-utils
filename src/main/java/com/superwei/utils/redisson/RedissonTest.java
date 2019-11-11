@@ -1,9 +1,13 @@
 package com.superwei.utils.redisson;
 
+import org.redisson.api.RAtomicDouble;
+import org.redisson.api.RAtomicLong;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author weidongge
@@ -15,6 +19,9 @@ import java.util.concurrent.TimeUnit;
 public class RedissonTest {
 
     static final String KEY = "LOCK_KEY";
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @GetMapping("/test")
     public Object test(){
@@ -54,6 +61,25 @@ public class RedissonTest {
             return "FAIL";
         }
     }
+    @GetMapping("/test3")
+    public void test3(){
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        for (int i=0;i<4;i++){
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    RAtomicDouble redissonClientAtomicDouble = redissonClient.getAtomicDouble("redisson_test_key");
+                    for (int i=0;i<250;i++){
+                        double andDecrement = redissonClientAtomicDouble.getAndDecrement();
+                        System.out.println("线程名 "+Thread.currentThread().getName()+"  减一修改之后的值 "+andDecrement);
+                    }
+                }
+            });
+        }
+    }
+
+
 
 
 
