@@ -71,6 +71,8 @@ public class TestController {
 
         inChannel.close();
         outChannel.close();
+
+
     }
 
     public static void copyChannel1(ReadableByteChannel in, WritableByteChannel out) throws IOException {
