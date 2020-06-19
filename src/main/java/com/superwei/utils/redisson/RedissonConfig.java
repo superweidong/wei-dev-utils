@@ -2,6 +2,7 @@ package com.superwei.utils.redisson;
 
 import org.redisson.Redisson;
 import org.redisson.api.RAtomicLong;
+import org.redisson.api.RKeys;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class RedissonConfig {
         long l = redisson.get();
         System.out.println("初始值  "+ l);
         LockerUtil.setLocker(redissonLocker);
+
+        RKeys keys = redissonClient.getKeys();
 
         return redissonLocker;
     }
