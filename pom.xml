@@ -52,6 +52,18 @@
             <version>3.0.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.34</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.34</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- http 客户端依赖 -->
         <dependency>

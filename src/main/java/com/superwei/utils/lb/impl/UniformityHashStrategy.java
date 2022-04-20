@@ -27,8 +27,7 @@ public class UniformityHashStrategy implements LoadBalanceStrategy {
         }
         int hash = calculateHash((String) object);
         SortedMap<Integer, ServiceProvider> subMap = sortedMap.subMap(hash, Integer.MAX_VALUE);
-
-        ServiceProvider providerConfig = subMap.size() == 0 ? subMap.get(0) : subMap.get(subMap.firstKey());
+        ServiceProvider providerConfig = subMap.get(subMap.firstKey());
         printLog(sortedMap, providerConfig, hash);
         return providerConfig;
     }
