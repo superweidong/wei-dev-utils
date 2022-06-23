@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * @author apple
@@ -18,13 +16,19 @@ public class TestMain {
         Target target1 = BeanConvertCopyUtil.convertTo(source, Target::new);
         System.out.println(target1);
         Target target2 = BeanConvertCopyUtil.convertTo(source, Target::new, (source1, target) -> target.setAddress(source1.getName()));
-        System.out.println(target1);
+        System.out.println(target2);
 
         ArrayList<Source> sources = Lists.newArrayList(new Source("李四", 10), new Source("王五", 27));
-        Collection<Target> targets = BeanConvertCopyUtil.convertToCollection(sources, Target::new, ArrayList::new);
+        List<Target> targets = BeanConvertCopyUtil.convertToList(sources, Target::new);
         System.out.println(targets);
-        Collection<Target> targets2 = BeanConvertCopyUtil.convertToCollection(sources, Target::new, HashSet::new, (source1, target) -> target.setAddress(source1.getName()));
+        List<Target> targets2 = BeanConvertCopyUtil.convertToList(sources, Target::new, (source1, target) -> target.setAddress(source1.getName()));
         System.out.println(targets2);
+
+        ArrayList<Source> sources3 = Lists.newArrayList(new Source("李四", 10), new Source("王五", 27));
+        Set<Target> targets3 = BeanConvertCopyUtil.convertToSet(sources3, Target::new);
+        System.out.println(targets3);
+        Set<Target> targets4 = BeanConvertCopyUtil.convertToSet(sources3, Target::new, (source1, target) -> target.setAddress(source1.getName()));
+        System.out.println(targets4);
     }
 
     @Data

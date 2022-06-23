@@ -1,11 +1,8 @@
 package com.superwei.utils.beancopy;
 
-import org.junit.Assert;
 import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -42,13 +39,14 @@ public class BeanConvertCopyUtil extends BeanUtils {
      * @date 2022/6/23 14:24
      **/
     public static <S, T> T convertTo(S source, Supplier<T> targetSupplier, ConvertCallBack<S, T> callBack) {
-        Assert.assertNotNull("源对象不可为空", source);
-        Assert.assertNotNull("目标对象为Supplier不可为空", targetSupplier);
+        if (Objects.isNull(source) || Objects.isNull(targetSupplier)) {
+            return null;
+        }
         T target = targetSupplier.get();
         try {
             copyProperties(source, target);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new BusinessException("复制属性异常");
         }
         if (Objects.nonNull(callBack)) {
             callBack.callBack(source, target);
@@ -56,37 +54,75 @@ public class BeanConvertCopyUtil extends BeanUtils {
         return target;
     }
 
-
     /**
-     * 转换集合对象
-     *
-     * @param sourceCollection   源对象集合
-     * @param targetSupplier     目标对象
-     * @param targetCollSupplier 目标对象存储集合
-     * @return java.util.Collection<T>
-     * @author weidongge
-     * @date 2022/6/23 15:02
-     **/
-    public static <S, T> Collection<T> convertToCollection(Collection<S> sourceCollection, Supplier<T> targetSupplier, Supplier<Collection<T>> targetCollSupplier) {
-        return convertToCollection(sourceCollection, targetSupplier, targetCollSupplier, null);
-    }
-
-
-    /**
-     * 转换集合对象
+     * 转换集合对象,返回指定类型集合
      *
      * @param sourceCollection   源对象集合
      * @param targetSupplier     目标对象
      * @param targetCollSupplier 目标对象存储集合<ArrayList::new> OR <HashSet::new> etc
+     * @param callBack           回调函数
      * @return java.util.Collection<T>
      * @author weidongge
      * @date 2022/6/23 15:02
      **/
-    public static <S, T> Collection<T> convertToCollection(Collection<S> sourceCollection, Supplier<T> targetSupplier, Supplier<Collection<T>> targetCollSupplier, ConvertCallBack<S, T> callBack) {
-        return sourceCollection.stream()
-                .map(source -> convertTo(source, targetSupplier, callBack))
-                .collect(Collectors.toCollection(Objects.isNull(targetCollSupplier) ? ArrayList::new : targetCollSupplier));
+    private static <S, T> Collection<T> convertToCollection(Collection<S> sourceCollection, Supplier<T> targetSupplier, Supplier<Collection<T>> targetCollSupplier, ConvertCallBack<S, T> callBack) {
+        return sourceCollection.stream().map(source -> convertTo(source, targetSupplier, callBack)).collect(Collectors.toCollection(targetCollSupplier));
     }
+
+    /**
+     * 转换集合对象,返回List
+     *
+     * @param sourceCollection 源对象集合
+     * @param targetSupplier   目标对象
+     * @return java.util.Collection<T>
+     * @author weidongge
+     * @date 2022/6/23 15:02
+     **/
+    public static <S, T> List<T> convertToList(Collection<S> sourceCollection, Supplier<T> targetSupplier) {
+        return (ArrayList<T>) convertToCollection(sourceCollection, targetSupplier, ArrayList::new, null);
+    }
+
+    /**
+     * 转换集合对象,返回List
+     *
+     * @param sourceCollection 源对象集合
+     * @param targetSupplier   目标对象
+     * @param callBack         回调函数
+     * @return java.util.Collection<T>
+     * @author weidongge
+     * @date 2022/6/23 15:02
+     **/
+    public static <S, T> List<T> convertToList(Collection<S> sourceCollection, Supplier<T> targetSupplier, ConvertCallBack<S, T> callBack) {
+        return (ArrayList<T>) convertToCollection(sourceCollection, targetSupplier, ArrayList::new, callBack);
+    }
+
+    /**
+     * 转换集合对象,返回Set
+     *
+     * @param sourceCollection 源对象集合
+     * @param targetSupplier   目标对象
+     * @return java.util.Collection<T>
+     * @author weidongge
+     * @date 2022/6/23 15:02
+     **/
+    public static <S, T> Set<T> convertToSet(Collection<S> sourceCollection, Supplier<T> targetSupplier) {
+        return (Set<T>) convertToCollection(sourceCollection, targetSupplier, HashSet::new, null);
+    }
+
+    /**
+     * 转换集合对象,返回Set
+     *
+     * @param sourceCollection 源对象集合
+     * @param targetSupplier   目标对象
+     * @param callBack         回调函数
+     * @return java.util.Collection<T>
+     * @author weidongge
+     * @date 2022/6/23 15:02
+     **/
+    public static <S, T> Set<T> convertToSet(Collection<S> sourceCollection, Supplier<T> targetSupplier, ConvertCallBack<S, T> callBack) {
+        return (Set<T>) convertToCollection(sourceCollection, targetSupplier, HashSet::new, callBack);
+    }
+
 
     /**
      * 回调接口
