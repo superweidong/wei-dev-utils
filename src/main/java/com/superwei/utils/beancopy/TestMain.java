@@ -6,20 +6,24 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
+/**
+ * @author apple
+ */
 public class TestMain {
 
     public static void main(String[] args) {
         Source source = new Source("张三", 20);
-        Target target1 = BeanConvertCopyUtil.convertTo(source, Target::new, null);
+        Target target1 = BeanConvertCopyUtil.convertTo(source, Target::new);
         System.out.println(target1);
         Target target2 = BeanConvertCopyUtil.convertTo(source, Target::new, (source1, target) -> target.setAddress(source1.getName()));
         System.out.println(target1);
 
         ArrayList<Source> sources = Lists.newArrayList(new Source("李四", 10), new Source("王五", 27));
-        Collection<Target> targets = BeanConvertCopyUtil.convertToCollection(sources, Target::new, ArrayList::new, null);
+        Collection<Target> targets = BeanConvertCopyUtil.convertToCollection(sources, Target::new, ArrayList::new);
         System.out.println(targets);
-        Collection<Target> targets2 = BeanConvertCopyUtil.convertToCollection(sources, Target::new, ArrayList::new, (source1, target) -> target.setAddress(source1.getName()));
+        Collection<Target> targets2 = BeanConvertCopyUtil.convertToCollection(sources, Target::new, HashSet::new, (source1, target) -> target.setAddress(source1.getName()));
         System.out.println(targets2);
     }
 
