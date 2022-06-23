@@ -46,7 +46,7 @@ public class BeanConvertCopyUtil extends BeanUtils {
         try {
             copyProperties(source, target);
         } catch (Exception e) {
-            throw new BusinessException("复制属性异常");
+            throw new BusinessException("复制属性异常", e);
         }
         if (Objects.nonNull(callBack)) {
             callBack.callBack(source, target);
