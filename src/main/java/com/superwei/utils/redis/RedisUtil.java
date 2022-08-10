@@ -11,6 +11,13 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class RedisUtil {
+
+    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_IF_NOT_EXIST = "NX";
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+    private static final Long RELEASE_SUCCESS = 1L;
+    private static final String DEFAULT_LOCK_VALUE = "1";
+
     private static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
     private JedisPool jedisPool;
     private static final int DEFULT_DATABASE;
@@ -384,6 +391,21 @@ public class RedisUtil {
         }
 
         return var6;
+    }
+
+    /**
+     * 加锁, value会被设为1, 使用默认数据库
+     *
+     * @param lockKey lockKey
+     * @param expire  过期毫秒数
+     * @return 是否加锁成功, 加锁不成功意味着已经存在锁
+     */
+    public boolean lock(String lockKey, int expire) {
+        try (Jedis jedis = getJedis()) {
+            jedis.select(DEFULT_DATABASE);
+            String setResult = jedis.set(lockKey, "1", SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expire);
+            return LOCK_SUCCESS.equals(setResult);
+        }
     }
 
     public void setStringByDataBase(String key, String str, int dataBase) {

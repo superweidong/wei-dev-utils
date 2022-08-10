@@ -1,12 +1,11 @@
 package com.superwei.utils.idempotent;
 
 import com.alibaba.fastjson.JSON;
+import com.shebao.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -18,36 +17,40 @@ public class IdempotentHelper {
 
     /**
      * 获取md5串
-     * @param json reqJSON
+     *
+     * @param json        reqJSON
      * @param excludeKeys excludeKeys
      * @return java.lang.String
-     * @author weidongge@51shebao.com
+     * @author weidongge
      * @date 2022/3/29
      */
-    public String getParamMD5(final String json, String... excludeKeys) {
+    public static String getMd5(final String json, String... excludeKeys) {
         TreeMap paramTreeMap = JSON.parseObject(json, TreeMap.class);
-        if (excludeKeys!=null) {
-            List<String> excludeKeyList = Arrays.asList(excludeKeys);
-            if (!excludeKeyList.isEmpty()) {
-                for (String excludeKey : excludeKeyList) {
-                    paramTreeMap.remove(excludeKey);
-                }
+        if (excludeKeys.length > 0) {
+            for (String excludeKey : excludeKeys) {
+                paramTreeMap.remove(excludeKey);
             }
         }
-        String paramTreeMapJson = JSON.toJSONString(paramTreeMap);
-        String md5deDupParam = jdkMD5(paramTreeMapJson);
-        log.debug("md5 = {}, excludeKeys = {} paramTreeMapJSON = {}", md5deDupParam, Arrays.deepToString(excludeKeys), paramTreeMapJson);
-        return md5deDupParam;
+        return jdkMd5(JSON.toJSONString(paramTreeMap));
     }
 
-    private static String jdkMD5(String src) {
-        String res = null;
+    /**
+     * MD5
+     *
+     * @param src src
+     * @return java.lang.String
+     * @author weidongge
+     * @date 2022/8/5 15:35
+     **/
+    private static String jdkMd5(String src) {
+        String res;
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             byte[] mdBytes = messageDigest.digest(src.getBytes());
             res = DatatypeConverter.printHexBinary(mdBytes);
         } catch (Exception e) {
             log.error("MD5处理异常", e);
+            throw new BusinessException("MD5处理异常", e);
         }
         return res;
     }
