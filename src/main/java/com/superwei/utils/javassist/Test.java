@@ -16,17 +16,20 @@ import java.util.List;
 public class Test {
 
     public static void main(String[] args) throws Exception {
-        Class<?> aClass = GenerateClass.initMyClass("Temp1", SuperDto.class, Arrays.asList("name", "age"));
-        Class<?> bClass = GenerateClass.initMyClass("Temp2", SuperDto.class, Arrays.asList("name", "amount"));
-        HashMap<String, Class<?>> map = Maps.newHashMap();
-        map.put("Temp1", aClass);
-        map.put("Temp2", bClass);
-        for (int i = 1; i <= 2; i++) {
-            // 写法1
-            String fileName = TestFileUtil.getPath() + "noModelWrite" + System.currentTimeMillis() + ".xlsx";
-            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
-            EasyExcelFactory.write(fileName, map.get("Temp" + i)).sheet("模板").doWrite(dataObj());
-        }
+//        Class<?> aClass = GenerateClass.initMyClass("Temp1", SuperDto.class, Arrays.asList("name", "age"));
+//        Class<?> bClass = GenerateClass.initMyClass("Temp2", SuperDto.class, Arrays.asList("name", "amount"));
+//        HashMap<String, Class<?>> map = Maps.newHashMap();
+//        map.put("Temp1", aClass);
+//        map.put("Temp2", bClass);
+//        for (int i = 1; i <= 2; i++) {
+//            // 写法1
+//            String fileName = TestFileUtil.getPath() + "noModelWrite" + System.currentTimeMillis() + ".xlsx";
+//            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+//            EasyExcelFactory.write(fileName, map.get("Temp" + i)).sheet("模板").doWrite(dataObj());
+//        }
+
+        JavassistClassGenerator generator  = new JavassistClassGenerator();
+        generator.createClass("com.superwei.utils.javassist", "Tmp9",SuperDto.class);
 
     }
 
