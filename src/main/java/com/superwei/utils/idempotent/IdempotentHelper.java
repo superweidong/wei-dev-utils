@@ -1,7 +1,6 @@
 package com.superwei.utils.idempotent;
 
 import com.alibaba.fastjson.JSON;
-import com.shebao.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.DatatypeConverter;
@@ -43,14 +42,13 @@ public class IdempotentHelper {
      * @date 2022/8/5 15:35
      **/
     private static String jdkMd5(String src) {
-        String res;
+        String res = null;
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             byte[] mdBytes = messageDigest.digest(src.getBytes());
             res = DatatypeConverter.printHexBinary(mdBytes);
         } catch (Exception e) {
             log.error("MD5处理异常", e);
-            throw new BusinessException("MD5处理异常", e);
         }
         return res;
     }
